@@ -12,7 +12,18 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    @product = Product.new
+    @product = Product.new(product_params)
+
+    respond_to do |format|
+      if @product.save
+        format.html { redirect_to @product, notice: "Product was successfully created." }
+        format.json { render :show, status: :created, location: @product }
+      else
+        puts @product.errors.full_messages
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @product.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
   end
 
   # GET /products/1/edit
